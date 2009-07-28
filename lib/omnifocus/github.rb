@@ -12,7 +12,7 @@ module OmniFocus::Github
   end
 
   def populate_github_tasks
-    user  = ARGV.shift || `git config --global github.user`.chomp
+    user  = `git config --global github.user`.chomp
     projects = fetch("repos/show/#{user}", "repositories").select { |project|
       project[:open_issues] > 0
     }.map { |project|
