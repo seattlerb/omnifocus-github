@@ -2,7 +2,7 @@ require 'open-uri'
 require 'yaml'
 
 module OmniFocus::Github
-  VERSION = '1.0.0'
+  VERSION = '1.0.1'
 
   GH_URL = "https://github.com"
 
