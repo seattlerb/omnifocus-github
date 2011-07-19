@@ -12,7 +12,7 @@ module OmniFocus::Github
   end
 
   def populate_github_tasks
-    user  = `git config --global github.user`.chomp
+    @user = user = `git config --global github.user`.chomp
 
     # Personal projects
     projects = fetch("repos/show/#{user}", "repositories").select { |project|
@@ -22,49 +22,40 @@ module OmniFocus::Github
     }
 
     projects.sort.each do |project|
-      warn "  scanning #{user}/#{project}"
-      fetch("issues/list/#{user}/#{project}/open", "issues").each do |issue|
-        number    = issue["number"]
-        ticket_id = "GH-#{project}##{number}"
-        title     = "#{ticket_id}: #{issue["title"]}"
-        url       = "#{GH_URL}/#{user}/#{project}/issues/#{number}"
-
-        if existing[ticket_id] then
-          bug_db[existing[ticket_id]][ticket_id] = true
-          next
-        end
-
-        bug_db[project][ticket_id] = [title, url]
-      end
+      populate_issues_for user, project
     end
 
     # Organization projects
-    orgs = fetch("user/show/#{user}/organizations", "organizations")
-    orgs.each do |o|
-      login = o["login"]
+    fetch("user/show/#{user}/organizations", "organizations").each do |org|
+      login = org["login"]
       projects = fetch("repos/show/#{login}", "repositories")
       projects = projects.select { |project| project[:open_issues] > 0}
       projects = projects.map{|project| project[:name]}
 
       projects.sort.each do |project|
-        warn "  scanning #{login}/#{project}"
-        issues = fetch("issues/list/#{login}/#{project}/open", "issues")
-        issues.each do |issue|
-          number    = issue["number"]
-          t_user    = issue["user"]
-          ticket_id = "GH-#{project}##{number}"
-          title     = "#{ticket_id}: #{issue["title"]}"
-          url       = "#{GH_URL}/#{login}/#{project}/issues/#issue/#{number}"
-
-          next unless t_user == user
-          if existing[ticket_id] then
-            bug_db[existing[ticket_id]][ticket_id] = true
-            next
-          end
-
-          bug_db[project][ticket_id] = [title, url]
-        end
+        populate_issues_for login, project
       end
+    end
+  end
+
+  def populate_issues_for user_org, project
+    warn "  #{user_org}/#{project}"
+
+    fetch("issues/list/#{user_org}/#{project}/open", "issues").each do |issue|
+      number    = issue["number"]
+      t_user    = issue["user"]
+      ticket_id = "GH-#{project}##{number}"
+      title     = "#{ticket_id}: #{issue["title"]}"
+      url       = "#{GH_URL}/#{user_org}/#{project}/issues/#{number}"
+
+      next unless t_user == @user
+
+      if existing[ticket_id] then
+        bug_db[existing[ticket_id]][ticket_id] = true
+        next
+      end
+
+      bug_db[project][ticket_id] = [title, url]
     end
   end
 end
