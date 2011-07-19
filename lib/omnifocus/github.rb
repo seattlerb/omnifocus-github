@@ -4,6 +4,7 @@ require 'yaml'
 module OmniFocus::Github
   VERSION = '1.0.1'
 
+  PREFIX = "GH"
   GH_URL = "https://github.com"
 
   def fetch url, key
@@ -12,6 +13,12 @@ module OmniFocus::Github
   end
 
   def populate_github_tasks
+    @filter = ARGV.shift
+
+    bug_db.delete_if do |k,v|
+      not k.index @filter
+    end if @filter
+
     @user = user = `git config --global github.user`.chomp
 
     # Personal projects
@@ -39,12 +46,14 @@ module OmniFocus::Github
   end
 
   def populate_issues_for user_org, project
+    return unless project.index @filter if @filter
+
     warn "  #{user_org}/#{project}"
 
     fetch("issues/list/#{user_org}/#{project}/open", "issues").each do |issue|
       number    = issue["number"]
       t_user    = issue["user"]
-      ticket_id = "GH-#{project}##{number}"
+      ticket_id = "#{PREFIX}-#{project}##{number}"
       title     = "#{ticket_id}: #{issue["title"]}"
       url       = "#{GH_URL}/#{user_org}/#{project}/issues/#{number}"
 
