@@ -1,15 +1,21 @@
 require 'open-uri'
 require 'yaml'
+require 'json'
 
 module OmniFocus::Github
   VERSION = '1.0.2'
 
   PREFIX = "GH"
   GH_URL = "https://github.com"
+  GH_API_URL = "https://api.github.com"
 
-  def fetch url, key
-    base_url = "#{GH_URL}/api/v2/yaml"
+  def fetch url, key, ver = 2
+    base_url = "#{GH_URL}/api/v#{ver}/yaml"
     YAML.load(URI.parse("#{base_url}/#{url}").read)[key]
+  end
+
+  def fetch3 url
+    JSON.parse(URI.parse("#{GH_API_URL}/#{url}").read)
   end
 
   def populate_github_tasks
@@ -50,9 +56,15 @@ module OmniFocus::Github
 
     warn "  #{user_org}/#{project}"
 
-    fetch("issues/list/#{user_org}/#{project}/open", "issues").each do |issue|
+    fetch3("repos/#{user_org}/#{project}/issues").each do |issue|
+      next unless issue["assignee"]
+
       number    = issue["number"]
-      t_user    = issue["user"]
+      t_user    = begin
+                    issue["assignee"]["login"]
+                  rescue NoMethodError
+                    pp issue
+                  end
       ticket_id = "#{PREFIX}-#{project}##{number}"
       title     = "#{ticket_id}: #{issue["title"]}"
       url       = "#{GH_URL}/#{user_org}/#{project}/issues/#{number}"
