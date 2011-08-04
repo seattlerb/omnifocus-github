@@ -8,7 +8,8 @@ Hoe.plugin :seattlerb
 Hoe.spec 'omnifocus-github' do
   developer 'Ryan Davis', 'ryand-ruby@zenspider.com'
 
-  extra_deps << 'omnifocus'
+  dependency "omnifocus", "~> 1.4"
+  dependency "json",      "~> 1.5.0"
 
   self.rubyforge_name = 'seattlerb'
 end
