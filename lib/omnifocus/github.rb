@@ -3,7 +3,7 @@ require 'yaml'
 require 'json'
 
 module OmniFocus::Github
-  VERSION = '1.0.2'
+  VERSION = '1.1.0'
 
   PREFIX = "GH"
   GH_URL = "https://github.com"

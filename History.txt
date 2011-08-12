@@ -1,3 +1,15 @@
+=== 1.1.0 / 2011-08-11
+
+* 3 minor enhancements:
+
+  * Added (beta) commandline project filtering (do NOT use w/o filtering for plugin also).
+  * Added json dep for v3 api
+  * Switched to v3 for org/project issue gathering. Now has assignee
+
+* 1 bug fix:
+
+  * Added PREFIX constant for new omnifocus plugin filtering.
+
 === 1.0.2 / 2011-07-19
 
 * 1 minor enhancement:
