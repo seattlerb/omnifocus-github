@@ -2,7 +2,7 @@ require 'open-uri'
 require 'json'
 
 module OmniFocus::Github
-  VERSION = '1.1.0'
+  VERSION = '1.2.0'
   PREFIX  = "GH"
 
   def populate_github_tasks

@@ -1,3 +1,10 @@
+=== 1.2.0 / 2011-08-26
+
+* 2 minor enhancements:
+
+  * Use new v3 api to get all issues in one request. Very fast!
+  * Removed all superfluous methods after switching to cleaner API.
+
 === 1.1.0 / 2011-08-11
 
 * 3 minor enhancements:
