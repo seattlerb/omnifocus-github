@@ -6,13 +6,31 @@ module OmniFocus::Github
   PREFIX  = "GH"
 
   def populate_github_tasks
-    # curl -i -u "#{user}:#{pass}" "https://api.github.com/issues"
+    # curl -i -u "#{user}:#{pass}" "https://api.github.com/issues?page=1"
 
     user = `git config --global github.user`.chomp
     pass = `git config --global github.password`.chomp
-    uri  = URI.parse "https://api.github.com/issues"
-    body = uri.read :http_basic_authentication => [user, pass]
 
+    body = fetch user, pass, 1
+
+    process body
+
+    (2..get_last(body)).each do |page|
+      process fetch user, pass, page
+    end
+  end
+
+  def fetch user, pass, page
+    uri = URI.parse "https://api.github.com/issues?page=#{page}"
+    uri.read :http_basic_authentication => [user, pass]
+  end
+
+  def get_last body
+    link, last = body.meta["link"], nil
+    link and link[/page=(\d+).. rel=.last/, 1].to_i or 0
+  end
+
+  def process body
     JSON.parse(body).each do |issue|
       number    = issue["number"]
       url       = issue["html_url"]
