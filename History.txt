@@ -1,3 +1,9 @@
+=== 1.3.0 / 2011-11-18
+
+* 1 minor enhancement:
+
+  * Added multi-page fetching for long user issue lists
+
 === 1.2.0 / 2011-08-26
 
 * 2 minor enhancements:
