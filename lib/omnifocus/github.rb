@@ -53,7 +53,7 @@ module OmniFocus::Github
       body      = issue["body"]
       project   = url.split(/\//)[-3]
       ticket_id = "#{PREFIX}-#{project}##{number}"
-      title     = "#{pr ? "PR " : ""} #{ticket_id}: #{issue["title"]}"
+      title     = "#{ticket_id}: #{pr ? "[PR] " : ""}#{issue["title"]}"
 
       if existing[ticket_id] then
         bug_db[existing[ticket_id]][ticket_id] = true
