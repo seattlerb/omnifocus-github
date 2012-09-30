@@ -5,27 +5,33 @@ module OmniFocus::Github
   VERSION = '1.3.0'
   PREFIX  = "GH"
 
+  GH_API_DEFAULT = "https://api.github.com"
+
   def populate_github_tasks
-    api = omnifocus_git_param :api, "https://api.github.com"
-    # Either token or user + password is required. If both
-    # are present, token is used.
-    auth = {
-      :user => omnifocus_git_param(:user),
-      :password => omnifocus_git_param(:password),
-      :token => omnifocus_git_param(:token),
-    }
+    omnifocus_git_param(:accounts, "github").split(/\s+/).each do |account|
+      api = omnifocus_git_param(:api, GH_API_DEFAULT, account)
+      # Either token or user + password is required. If both
+      # are present, token is used.
+      auth = {
+        :user => omnifocus_git_param(:user, nil, account),
+        :password => omnifocus_git_param(:password, nil, account),
+        :token => omnifocus_git_param(:token, nil, account),
+      }
+      unless auth[:token] || (auth[:user] && auth[:password])
+        warn "Missing authentication parameters for account #{account}."
+        next
+      end
 
-    body = fetch api, auth, 1
-
-    process body
-
-    (2..get_last(body)).each do |page|
-      process fetch api, auth, page
+      body = fetch(api, auth, 1)
+      process(account, body)
+      (2..get_last(body)).each do |page|
+        process(account, fetch(api, auth, page))
+      end
     end
   end
 
-  def omnifocus_git_param name, default = nil
-    param = `git config --global omnifocus-github.#{name}`.chomp
+  def omnifocus_git_param name, default = nil, prefix = "omnifocus-github"
+    param = `git config --global #{prefix}.#{name}`.chomp
     param.empty? ? default : param
   end
 
@@ -45,22 +51,22 @@ module OmniFocus::Github
     link and link[/page=(\d+).. rel=.last/, 1].to_i or 0
   end
 
-  def process body
+  def process account, body
     JSON.parse(body).each do |issue|
       pr        = issue["pull_request"] && !issue["pull_request"]["diff_url"].nil?
       number    = issue["number"]
       url       = issue["html_url"]
-      body      = issue["body"]
-      project   = url.split(/\//)[-3]
+      project   = "#{account}-#{url.split(/\//)[-3]}"
       ticket_id = "#{PREFIX}-#{project}##{number}"
       title     = "#{ticket_id}: #{pr ? "[PR] " : ""}#{issue["title"]}"
+      note      = "#{url}\n\n#{issue["body"]}"
 
       if existing[ticket_id] then
         bug_db[existing[ticket_id]][ticket_id] = true
         next
       end
 
-      bug_db[project][ticket_id] = [title, "#{url}\n\n#{body}"]
+      bug_db[project][ticket_id] = [title, note]
     end
   end
 end
