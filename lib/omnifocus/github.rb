@@ -22,10 +22,15 @@ module OmniFocus::Github
         next
       end
 
+      # process will omit the account label if nil.
+      # Supply nil for the default "github" account for compatibility
+      # with previous versions.
+      account_label = account == "github" ? nil : account
+
       body = fetch(api, auth, 1)
-      process(account, body)
+      process(account_label, body)
       (2..get_last(body)).each do |page|
-        process(account, fetch(api, auth, page))
+        process(account_label, fetch(api, auth, page))
       end
     end
   end
@@ -56,7 +61,7 @@ module OmniFocus::Github
       pr        = issue["pull_request"] && !issue["pull_request"]["diff_url"].nil?
       number    = issue["number"]
       url       = issue["html_url"]
-      project   = "#{account}-#{url.split(/\//)[-3]}"
+      project   = [account, url.split(/\//)[-3]].compact.join("-")
       ticket_id = "#{PREFIX}-#{project}##{number}"
       title     = "#{ticket_id}: #{pr ? "[PR] " : ""}#{issue["title"]}"
       note      = "#{url}\n\n#{issue["body"]}"
