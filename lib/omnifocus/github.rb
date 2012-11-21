@@ -5,24 +5,50 @@ module OmniFocus::Github
   VERSION = '1.3.0'
   PREFIX  = "GH"
 
+  GH_API_DEFAULT = "https://api.github.com"
+
   def populate_github_tasks
-    # curl -i -u "#{user}:#{pass}" "https://api.github.com/issues?page=1"
+    omnifocus_git_param(:accounts, "github").split(/\s+/).each do |account|
+      api = omnifocus_git_param(:api, GH_API_DEFAULT, account)
+      # Either token or user + password is required. If both
+      # are present, token is used.
+      auth = {
+        :user => omnifocus_git_param(:user, nil, account),
+        :password => omnifocus_git_param(:password, nil, account),
+        :token => omnifocus_git_param(:token, nil, account),
+      }
+      unless auth[:token] || (auth[:user] && auth[:password])
+        warn "Missing authentication parameters for account #{account}."
+        next
+      end
 
-    user = `git config --global github.user`.chomp
-    pass = `git config --global github.password`.chomp
+      # process will omit the account label if nil.
+      # Supply nil for the default "github" account for compatibility
+      # with previous versions.
+      account_label = account == "github" ? nil : account
 
-    body = fetch user, pass, 1
-
-    process body
-
-    (2..get_last(body)).each do |page|
-      process fetch user, pass, page
+      body = fetch(api, auth, 1)
+      process(account_label, body)
+      (2..get_last(body)).each do |page|
+        process(account_label, fetch(api, auth, page))
+      end
     end
   end
 
-  def fetch user, pass, page
-    uri = URI.parse "https://api.github.com/issues?page=#{page}"
-    uri.read :http_basic_authentication => [user, pass]
+  def omnifocus_git_param name, default = nil, prefix = "omnifocus-github"
+    param = `git config --global #{prefix}.#{name}`.chomp
+    param.empty? ? default : param
+  end
+
+  def fetch api, auth, page
+    uri = URI.parse "#{api}/issues?page=#{page}"
+    if auth[:token]
+      uri.read "Authorization" => "token #{auth[:token]}"
+    elsif auth[:user] && auth[:password]
+      uri.read :http_basic_authentication => [auth[:user], auth[:password]]
+    else
+      raise ArgumentError, "Missing authentication"
+    end
   end
 
   def get_last body
@@ -30,20 +56,22 @@ module OmniFocus::Github
     link and link[/page=(\d+).. rel=.last/, 1].to_i or 0
   end
 
-  def process body
+  def process account, body
     JSON.parse(body).each do |issue|
+      pr        = issue["pull_request"] && !issue["pull_request"]["diff_url"].nil?
       number    = issue["number"]
       url       = issue["html_url"]
-      project   = url.split(/\//)[-3]
+      project   = [account, url.split(/\//)[-3]].compact.join("-")
       ticket_id = "#{PREFIX}-#{project}##{number}"
-      title     = "#{ticket_id}: #{issue["title"]}"
+      title     = "#{ticket_id}: #{pr ? "[PR] " : ""}#{issue["title"]}"
+      note      = "#{url}\n\n#{issue["body"]}"
 
       if existing[ticket_id] then
         bug_db[existing[ticket_id]][ticket_id] = true
         next
       end
 
-      bug_db[project][ticket_id] = [title, url]
+      bug_db[project][ticket_id] = [title, note]
     end
   end
 end

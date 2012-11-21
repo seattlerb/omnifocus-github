@@ -7,6 +7,35 @@ rdoc :: http://seattlerb.rubyforge.org/omnifocus-github
 
 Plugin for omnifocus gem to provide github BTS synchronization.
 
+Support for Github Enterprise:
+
+In your git config, set the key omnifocus-github.accounts to a space
+separated list of github accounts. 
+
+    git config --global omnifocus-github.accounts "github myghe"
+
+For each account API end point and authentication information are
+should be stored in the git config under a key matching the
+account. For example:
+
+    git config --global github.user me
+    git config --global github.password mypassword
+    git config --global myghe.api https://ghe.mydomain.com/api/v3
+    git config --global myghe.token 1a2b3c4d5e6f7e8d
+
+For each account can you specify the following parameters:
+
+* api - specify an API endpoint other than
+  https://api.github.com. This is so you can point this at your Github
+  Enterprise endpoint.
+
+* user, password - A username and password pair for Basic http authentication.
+
+* token - An OAuth bearer token for OAuth workflows.
+
+If both a token and a username and password are supplied, the token
+is used.
+
 == FEATURES/PROBLEMS:
 
 * Provides github BTS synchronization.
