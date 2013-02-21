@@ -41,7 +41,10 @@
   * Added PREFIX constant for new omnifocus plugin filtering.
 
 === 1.0.1 / 2011-07-16
-* Fixed a bug.  Only adds tickets assigned to user, not all tickets in project.
+
+* 1 bug fix:
+
+  * Only adds tickets assigned to user, not all tickets in project.
 
 === 1.0.0 / 2009-07-28
 
