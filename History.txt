@@ -1,3 +1,9 @@
+=== 1.4.1 / 2013-04-09
+
+* 1 bug fix:
+
+  * 2.0: Relaxing the json dependency to ~> 1.5.
+
 === 1.4.0 / 2012-11-23
 
 * 2 minor enhancements:
