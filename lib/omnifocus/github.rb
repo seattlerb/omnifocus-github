@@ -1,5 +1,6 @@
 require 'open-uri'
 require 'json'
+require 'pp'
 
 module OmniFocus::Github
   VERSION = "1.4.1"
@@ -42,13 +43,18 @@ module OmniFocus::Github
 
   def fetch api, auth, page
     uri = URI.parse "#{api}/issues?page=#{page}"
-    if auth[:token]
-      uri.read "Authorization" => "token #{auth[:token]}"
-    elsif auth[:user] && auth[:password]
-      uri.read :http_basic_authentication => [auth[:user], auth[:password]]
+
+    headers = {
+      "User-Agent"=>"omnifocus-github/#{VERSION}"
+    }
+
+    if auth[:user] && auth[:password]
+      headers[:http_basic_authentication] = [auth[:user], auth[:password]]
     else
       raise ArgumentError, "Missing authentication"
     end
+
+    uri.read headers
   end
 
   def get_last body
