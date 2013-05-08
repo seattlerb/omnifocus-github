@@ -1,6 +1,5 @@
 require 'open-uri'
 require 'json'
-require 'pp'
 
 module OmniFocus::Github
   VERSION = "1.4.1"
@@ -11,14 +10,13 @@ module OmniFocus::Github
   def populate_github_tasks
     omnifocus_git_param(:accounts, "github").split(/\s+/).each do |account|
       api = omnifocus_git_param(:api, GH_API_DEFAULT, account)
-      # Either token or user + password is required. If both
-      # are present, token is used.
+      # User + password is required
       auth = {
         :user => omnifocus_git_param(:user, nil, account),
         :password => omnifocus_git_param(:password, nil, account),
         :token => omnifocus_git_param(:token, nil, account),
       }
-      unless auth[:token] || (auth[:user] && auth[:password])
+      unless (auth[:user] && auth[:password])
         warn "Missing authentication parameters for account #{account}."
         next
       end
