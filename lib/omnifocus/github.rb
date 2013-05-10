@@ -2,7 +2,7 @@ require 'open-uri'
 require 'json'
 
 module OmniFocus::Github
-  VERSION = "1.4.1"
+  VERSION = "1.5.0"
   PREFIX  = "GH"
 
   GH_API_DEFAULT = "https://api.github.com"

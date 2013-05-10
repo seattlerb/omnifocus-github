@@ -1,3 +1,15 @@
+=== 1.5.0 / 2013-05-10
+
+* 1 major enhancement:
+
+  * Remove support for github api tokens (no longer supported by github)
+
+* 3 bug fixes:
+
+  * add user-agent to api requests (required by github)
+  * display error message if trying to authenticate without user/pass
+  * remove debugging output
+
 === 1.4.1 / 2013-04-09
 
 * 1 bug fix:
