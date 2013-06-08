@@ -14,14 +14,14 @@ separated list of github accounts.
 
     git config --global omnifocus-github.accounts "github myghe"
 
-For each account API end point and authentication information are
+For each account API and web end points and authentication information 
 should be stored in the git config under a key matching the
 account. For example:
 
     git config --global github.user me
     git config --global github.password mypassword
     git config --global myghe.api https://ghe.mydomain.com/api/v3
-    git config --global myghe.token 1a2b3c4d5e6f7e8d
+    git config --global myghe.api https://ghe.mydomain.com/
 
 For each account can you specify the following parameters:
 
@@ -29,12 +29,10 @@ For each account can you specify the following parameters:
   https://api.github.com. This is so you can point this at your Github
   Enterprise endpoint.
 
+* web - specify an API endpoint other than https://www.github.com. This
+  is so you can point this at your Github Enterprise endpoint
+
 * user, password - A username and password pair for Basic http authentication.
-
-* token - An OAuth bearer token for OAuth workflows.
-
-If both a token and a username and password are supplied, the token
-is used.
 
 == FEATURES/PROBLEMS:
 
@@ -43,6 +41,7 @@ is used.
 == REQUIREMENTS:
 
 * omnifocus
+* octokit
 * ~/.gitrc must have github username defined
 
 == INSTALL:

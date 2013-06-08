@@ -1,36 +1,28 @@
-require 'open-uri'
-require 'json'
+require 'octokit'
 
 module OmniFocus::Github
   VERSION = "1.5.0"
   PREFIX  = "GH"
 
-  GH_API_DEFAULT = "https://api.github.com"
-
   def populate_github_tasks
     omnifocus_git_param(:accounts, "github").split(/\s+/).each do |account|
-      api = omnifocus_git_param(:api, GH_API_DEFAULT, account)
+      endpoints = {}
+      endpoints[:api] = omnifocus_git_param(:api, nil, account)
+      endpoints[:web] = omnifocus_git_param(:web, nil, account)
+
       # User + password is required
       auth = {
         :user => omnifocus_git_param(:user, nil, account),
         :password => omnifocus_git_param(:password, nil, account),
-        :token => omnifocus_git_param(:token, nil, account),
       }
       unless (auth[:user] && auth[:password])
         warn "Missing authentication parameters for account #{account}."
         next
       end
 
-      # process will omit the account label if nil.
-      # Supply nil for the default "github" account for compatibility
-      # with previous versions.
       account_label = account == "github" ? nil : account
 
-      body = fetch(api, auth, 1)
-      process(account_label, body)
-      (2..get_last(body)).each do |page|
-        process(account_label, fetch(api, auth, page))
-      end
+      process(account_label, gh_client(account, auth, endpoints))
     end
   end
 
@@ -39,29 +31,31 @@ module OmniFocus::Github
     param.empty? ? default : param
   end
 
-  def fetch api, auth, page
-    uri = URI.parse "#{api}/issues?page=#{page}"
-
-    headers = {
-      "User-Agent"=>"omnifocus-github/#{VERSION}"
-    }
+  def gh_client account, auth, endpoints
+    if account != "github"
+      if endpoints[:api] && endpoints[:web]
+        Octokit.configure do |c|
+          c.api_endpoint = endpoints[:api]
+          c.web_endpoint = endpoints[:web]
+        end
+      else
+        raise ArgumentError, "api and web endpoint configs required for github enterprise"
+      end
+    end
 
     if auth[:user] && auth[:password]
-      headers[:http_basic_authentication] = [auth[:user], auth[:password]]
+      client = Octokit::Client.new(:login => auth[:user],
+                                   :password => auth[:password])
+
+      client.user(auth[:user])
     else
       raise ArgumentError, "Missing authentication"
     end
-
-    uri.read headers
+    client
   end
 
-  def get_last body
-    link, last = body.meta["link"], nil
-    link and link[/page=(\d+).. rel=.last/, 1].to_i or 0
-  end
-
-  def process account, body
-    JSON.parse(body).each do |issue|
+  def process account, client
+    client.user_issues.each do |issue|
       pr        = issue["pull_request"] && !issue["pull_request"]["diff_url"].nil?
       number    = issue["number"]
       url       = issue["html_url"]
