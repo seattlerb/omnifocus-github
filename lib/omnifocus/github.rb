@@ -1,7 +1,7 @@
 require 'octokit'
 
 module OmniFocus::Github
-  VERSION = "1.5.0"
+  VERSION = "1.6.0"
   PREFIX  = "GH"
 
   def populate_github_tasks

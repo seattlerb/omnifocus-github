@@ -10,7 +10,7 @@ Hoe.spec 'omnifocus-github' do
 
   dependency "omnifocus", "~> 2.0"
   dependency "octokit",   "~> 1.24"
-  dependency "system-timer" "~> 1.2" # bug in octokit's deps
+  dependency "system-timer", "~> 1.2" # bug in octokit's deps
 
   self.rubyforge_name = 'seattlerb'
 end
