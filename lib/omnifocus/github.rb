@@ -3,7 +3,7 @@ require 'octokit'
 Octokit.auto_paginate = true
 
 module OmniFocus::Github
-  VERSION = "1.6.0"
+  VERSION = "1.7.0"
   PREFIX  = "GH"
 
   def populate_github_tasks

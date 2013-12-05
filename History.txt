@@ -1,3 +1,15 @@
+=== 1.7.0 / 2013-12-05
+
+* 3 minor enhancements:
+
+  * Added oauth-token authentication support: `git config --add github.oauth-token val`
+  * Turned on auto_paginate to ensure full list of issues.
+  * Updated dependency on octokit to ~> 2.0.
+
+* 1 bug fix:
+
+  * omnifocus-github now bitches if no accounts authenticate properly.
+
 === 1.6.0 / 2013-07-24
 
 * 2 major enhancements:
