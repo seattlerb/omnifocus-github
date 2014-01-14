@@ -1,4 +1,6 @@
+old_w, $-w = $-w, nil # don't you just hate sloppy developers?
 require 'octokit'
+$-w = old_w
 
 Octokit.auto_paginate = true
 
