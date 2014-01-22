@@ -1,3 +1,9 @@
+=== 1.7.1 / 2014-01-22
+
+* 1 bug fix:
+
+  * Turn off warnings when loading octokit to avoid horrible wall of warnings.
+
 === 1.7.0 / 2013-12-05
 
 * 3 minor enhancements:
