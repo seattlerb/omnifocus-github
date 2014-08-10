@@ -17,6 +17,7 @@ module OmniFocus::Github
 
       # User + password is required
       auth = {
+        :name     => omnifocus_git_param(:name,         nil, account),
         :user     => omnifocus_git_param(:user,         nil, account),
         :password => omnifocus_git_param(:password,     nil, account),
         :oauth    => omnifocus_git_param("oauth-token", nil, account),
@@ -26,6 +27,8 @@ module OmniFocus::Github
         warn "Missing authentication parameters for account #{account}."
         next
       end
+
+      auth[:name] = auth[:user] if auth[:name].nil?
 
       processed = true
       account_label = account == "github" ? nil : account
@@ -57,7 +60,7 @@ module OmniFocus::Github
       client = Octokit::Client.new(:login => auth[:user],
                                    :password => auth[:password])
 
-      client.user(auth[:user])
+      client.user(auth[:name])
     elsif auth[:user] && auth[:oauth]
       client = Octokit::Client.new :access_token => auth[:oauth]
       client.user.login
