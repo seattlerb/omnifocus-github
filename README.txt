@@ -34,6 +34,16 @@ For each account can you specify the following parameters:
 
 * user, password - A username and password pair for Basic http authentication.
 
+== GITHUB OAUTH SUPPORT
+
+When using OAuth, Github expects the OAuth token to be presented as your
+username, and your password should either be blank or set to 'x-oauth-basic'.
+These will need to be set, in addition to your Github username.  For example:
+
+    git config --global github.user 51951ceb3819276195e8525740bd4670232bc222
+    git config --global github.password x-oauth-basic
+    git config --global github.name me
+
 == FEATURES/PROBLEMS:
 
 * Provides github BTS synchronization.
