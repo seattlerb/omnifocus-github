@@ -1,3 +1,9 @@
+=== 1.8.0 / 2014-11-11
+
+* 1 minor enhancement:
+
+  * Specify the github name when using an OAuth token. (mutemule)
+
 === 1.7.1 / 2014-01-22
 
 * 1 bug fix:
