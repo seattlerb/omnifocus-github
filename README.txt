@@ -12,14 +12,14 @@ Support for Github Enterprise:
 In your git config, set the key omnifocus-github.accounts to a space
 separated list of github accounts. 
 
-    git config --global omnifocus-github.accounts "github myghe"
+    git config --global github.accounts "github myghe"
 
 For each account API and web end points and authentication information 
 should be stored in the git config under a key matching the
 account. For example:
 
-    git config --global omnifocus-github.user me
-    git config --global omnifocus-github.password mypassword
+    git config --global github.user me
+    git config --global github.password mypassword
     git config --global myghe.api https://ghe.mydomain.com/api/v3
     git config --global myghe.api https://ghe.mydomain.com/
 
@@ -40,9 +40,9 @@ When using OAuth, Github expects the OAuth token to be presented as your
 username, and your password should either be blank or set to 'x-oauth-basic'.
 These will need to be set, in addition to your Github username.  For example:
 
-    git config --global omnifocus-github.user 51951ceb3819276195e8525740bd4670232bc222
-    git config --global omnifocus-github.password x-oauth-basic
-    git config --global omnifocus-github.name me
+    git config --global github.user 51951ceb3819276195e8525740bd4670232bc222
+    git config --global github.password x-oauth-basic
+    git config --global github.name me
 
 == FEATURES/PROBLEMS:
 
@@ -58,6 +58,11 @@ These will need to be set, in addition to your Github username.  For example:
 
 * sudo gem install omnifocus-github
 
+= USAGE EXAMPLE:
+
+* of sync
+
+Will create an OF project under the nerd folder for each repo in Github with an open issue.
 == LICENSE:
 
 (The MIT License)
