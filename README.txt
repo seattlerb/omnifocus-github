@@ -43,6 +43,9 @@ These will need to be set, in addition to your Github username.  For example:
     git config --global github.user 51951ceb3819276195e8525740bd4670232bc222
     git config --global github.password x-oauth-basic
     git config --global github.name me
+    git config --global myghe.user d98ada440ce4b1853ced0e0cb83eb48b71a3e33d
+    git config --global myghe.password x-oauth-basic
+    git config --global myghe.name me
 
 == FEATURES/PROBLEMS:
 
