@@ -40,7 +40,7 @@ module OmniFocus::Github
   end
 
   def omnifocus_git_param name, default = nil, prefix = "omnifocus-github"
-    param = `git config --global #{prefix}.#{name}`.chomp
+    param = `git config #{prefix}.#{name}`.chomp
     param.empty? ? default : param
   end
 
