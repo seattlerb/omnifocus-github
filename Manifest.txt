@@ -1,6 +1,6 @@
 .autotest
 History.txt
 Manifest.txt
-README.txt
+README.rdoc
 Rakefile
 lib/omnifocus/github.rb
