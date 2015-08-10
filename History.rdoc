@@ -1,3 +1,9 @@
+=== 1.8.2 / 2015-08-10
+
+* 1 bug fix:
+
+  * Turn off explicit --global so git scoping can work. (maxim)
+
 === 1.8.1 / 2015-04-13
 
 * 1 bug fix:
