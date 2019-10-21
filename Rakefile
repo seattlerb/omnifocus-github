@@ -12,8 +12,8 @@ Hoe.spec 'omnifocus-github' do
 
   license "MIT"
 
-  dependency "omnifocus", "~> 2.0"
-  dependency "octokit",   "~> 2.0"
+  dependency "omnifocus", "~> 2.5"
+  dependency "octokit",   "~> 4.14"
 end
 
 # vim: syntax=ruby
