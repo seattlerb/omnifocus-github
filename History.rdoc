@@ -1,3 +1,9 @@
+=== 1.8.3 / 2019-12-15
+
+* 1 bug fix:
+
+  * Updated dependencies on omnifocus and octokit. (reubano)
+
 === 1.8.2 / 2015-08-10
 
 * 1 bug fix:
@@ -38,7 +44,7 @@
 
 * 2 major enhancements:
 
-  * Removed support for token authentication 
+  * Removed support for token authentication
   * Use Octokit to access github.
 
 * 1 minor enhancement:
@@ -116,4 +122,3 @@
 * 1 major enhancement
 
   * Birthday!
-

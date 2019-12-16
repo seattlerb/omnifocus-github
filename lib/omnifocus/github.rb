@@ -1,11 +1,11 @@
 old_w, $-w = $-w, nil # don't you just hate sloppy developers?
-require 'octokit'
+require "octokit"
 $-w = old_w
 
 Octokit.auto_paginate = true
 
 module OmniFocus::Github
-  VERSION = "1.8.2"
+  VERSION = "1.8.3"
   PREFIX  = "GH"
 
   def populate_github_tasks
