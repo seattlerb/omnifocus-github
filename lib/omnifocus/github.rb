@@ -81,6 +81,8 @@ module OmniFocus::Github
       url       = "https://github.com/#{issue.repository.full_name}/issues/#{number}"
       note      = "#{url}\n\n#{issue["body"]}"
 
+      next if excluded_projects.include? project
+
       if existing[ticket_id] then
         bug_db[project][ticket_id] = true
         next
