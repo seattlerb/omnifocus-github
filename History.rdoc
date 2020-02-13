@@ -1,3 +1,10 @@
+=== 1.9.0 / 2020-02-12
+
+* 2 minor enhancements:
+
+  * Exclude projects listed in ~/.omnifocus.yml.
+  * Updated to use omnifocus 2.6+.
+
 === 1.8.3 / 2019-12-15
 
 * 1 bug fix:
