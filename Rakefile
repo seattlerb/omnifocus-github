@@ -12,7 +12,7 @@ Hoe.spec 'omnifocus-github' do
 
   license "MIT"
 
-  dependency "omnifocus", "~> 2.5"
+  dependency "omnifocus", "~> 2.6"
   dependency "octokit",   "~> 4.14"
 end
 
