@@ -10,11 +10,11 @@ Plugin for omnifocus gem to provide github BTS synchronization.
 Support for Github Enterprise:
 
 In your git config, set the key github.accounts to a space
-separated list of github accounts. 
+separated list of github accounts.
 
     git config --global github.accounts "github myghe"
 
-For each account API and web end points and authentication information 
+For each account API and web end points and authentication information
 should be stored in the git config under a key matching the
 account. For example:
 
