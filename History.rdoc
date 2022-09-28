@@ -1,3 +1,14 @@
+=== 2.0.0 / 2022-09-28
+
+* 1 major enhancement:
+
+  * Removed #gh_client.
+
+* 2 minor enhancements:
+
+  * #process now takes the prefix for the ticket ID (default: GH).
+  * Refactored #gh_client + most #populate_github_tasks into #github_clients that returns a hash of prefix => octokit_client.
+
 === 1.9.0 / 2020-02-12
 
 * 2 minor enhancements:
